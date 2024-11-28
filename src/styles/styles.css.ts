@@ -13,3 +13,7 @@ globalStyle('body', {
   color: '#000',
   textRendering: 'optimizeLegibility',
 });
+
+globalStyle('.flexContainer', {
+  display: 'flex',
+});

@@ -29,3 +29,9 @@ export const plusButton = style({
   fontSize: '20px',
   cursor: 'pointer',
 });
+
+export const activeBoard = style({
+  backgroundColor: '#f0f0f0',
+  cursor: 'pointer',
+  fontWeight: 'bold',
+});

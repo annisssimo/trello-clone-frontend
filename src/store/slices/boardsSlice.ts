@@ -1,10 +1,11 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const initialState: BoardsState = {
   boards: [],
   isLoading: false,
   error: null,
+  currentBoard: null,
 };
 
 export const fetchBoards = createAsyncThunk(
@@ -80,7 +81,11 @@ export const deleteBoard = createAsyncThunk(
 const boardsSlice = createSlice({
   name: 'boards',
   initialState,
-  reducers: {},
+  reducers: {
+    setCurrentBoard: (state, action: PayloadAction<Board | null>) => {
+      state.currentBoard = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchBoards.pending, (state) => {
@@ -90,6 +95,9 @@ const boardsSlice = createSlice({
       .addCase(fetchBoards.fulfilled, (state, action) => {
         state.isLoading = false;
         state.boards = action.payload;
+        if (!state.currentBoard && action.payload.length > 0) {
+          state.currentBoard = action.payload[0];
+        }
       })
       .addCase(fetchBoards.rejected, (state, action) => {
         state.isLoading = false;
@@ -154,6 +162,9 @@ interface BoardsState {
   boards: Board[];
   isLoading: boolean;
   error: string | null;
+  currentBoard: Board | null;
 }
+
+export const { setCurrentBoard } = boardsSlice.actions;
 
 export default boardsSlice.reducer;

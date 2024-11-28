@@ -4,13 +4,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as styles from './Sidebar.css';
 import { Board } from '../Board/Board';
 import { Board as BoardType } from '../../types/types';
-import { fetchBoards, createBoard } from '../../store/slices/boardsSlice';
+import {
+  fetchBoards,
+  createBoard,
+  setCurrentBoard,
+} from '../../store/slices/boardsSlice';
 import { AppDispatch, RootState } from '../../store/store';
 import { Modal } from '../Modal/Modal';
 
-export const Sidebar = () => {
+const Sidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { boards, isLoading, error } = useSelector(
+  const { boards, isLoading, error, currentBoard } = useSelector(
     (state: RootState) => state.boards
   );
 
@@ -30,12 +34,21 @@ export const Sidebar = () => {
     setNewBoardTitle('');
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (newBoardTitle.trim()) {
-      dispatch(createBoard({ title: newBoardTitle }));
-      handleCloseModal();
+      const resultAction = await dispatch(
+        createBoard({ title: newBoardTitle })
+      );
+      if (createBoard.fulfilled.match(resultAction)) {
+        dispatch(setCurrentBoard(resultAction.payload));
+        handleCloseModal();
+      }
     }
+  };
+
+  const handleSelectBoard = (board: BoardType) => {
+    dispatch(setCurrentBoard(board));
   };
 
   if (isLoading) {
@@ -56,7 +69,11 @@ export const Sidebar = () => {
       </div>
       <ul className={styles.boardList}>
         {boards.map((board: BoardType) => (
-          <li key={board.id}>
+          <li
+            key={board.id}
+            className={currentBoard?.id === board.id ? styles.activeBoard : ''}
+            onClick={() => handleSelectBoard(board)}
+          >
             <Board title={board.title} />
           </li>
         ))}
@@ -78,3 +95,5 @@ export const Sidebar = () => {
     </div>
   );
 };
+
+export default Sidebar;
