@@ -13,5 +13,5 @@ export interface List {
 export interface Board {
   id: string;
   title: string;
-  lists: List[];
+  lists?: List[];
 }
