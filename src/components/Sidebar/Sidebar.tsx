@@ -55,10 +55,6 @@ const Sidebar = () => {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   return (
     <div className={styles.sidebarContainer}>
       <div className={styles.header}>
@@ -67,6 +63,7 @@ const Sidebar = () => {
           +
         </button>
       </div>
+      {error && <div className="error">{error}</div>}
       <ul className={styles.boardList}>
         {boards.map((board: BoardType) => (
           <li

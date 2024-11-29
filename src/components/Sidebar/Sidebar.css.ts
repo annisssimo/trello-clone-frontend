@@ -1,11 +1,12 @@
 import { style } from '@vanilla-extract/css';
 
 export const sidebarContainer = style({
-  width: '250px',
+  width: '233px',
   padding: '16px',
   borderRight: '1px solid #ddd',
   backgroundColor: '#f9f9f9',
   height: '100vh',
+  flexShrink: '0',
 });
 
 export const header = style({

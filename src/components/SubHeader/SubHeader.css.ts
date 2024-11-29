@@ -19,7 +19,6 @@ export const title = style({
   padding: '2px 6px',
   ':hover': {
     backgroundColor: '#bfbfbf',
-
     borderRadius: '4px',
   },
 });

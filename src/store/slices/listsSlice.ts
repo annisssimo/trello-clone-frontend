@@ -26,7 +26,7 @@ export const fetchLists = createAsyncThunk(
 
 export const addList = createAsyncThunk(
   'lists/addList',
-  async (newList: Omit<List, 'id' | 'listOrder'>, { rejectWithValue }) => {
+  async (newList: Omit<List, 'id'>, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/lists`,
@@ -150,7 +150,6 @@ interface List {
   id: string;
   title: string;
   boardId: string;
-  listOrder: number;
 }
 
 interface ListsState {
