@@ -26,10 +26,7 @@ export const fetchTasks = createAsyncThunk(
 
 export const createTask = createAsyncThunk(
   'tasks/createTask',
-  async (
-    newTask: { title: string; description: string; listId: number },
-    { rejectWithValue }
-  ) => {
+  async (newTask: { title: string; listId: number }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/tasks`,
@@ -122,6 +119,7 @@ const tasksSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchTasks.fulfilled, (state, action) => {
+        console.log('Загруженные задачи:', action.payload);
         state.isLoading = false;
         state.tasks = action.payload;
       })
@@ -190,9 +188,8 @@ export default tasksSlice.reducer;
 interface Task {
   id: number;
   title: string;
-  description: string;
+  description?: string;
   listId: number;
-  position: number;
 }
 
 interface TasksState {

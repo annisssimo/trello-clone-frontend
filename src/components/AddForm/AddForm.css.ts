@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 export const formContainer = style({
-  width: '272px',
+  width: '260px',
   padding: '8px',
   borderRadius: '12px',
   backgroundColor: '#f1f2f4',

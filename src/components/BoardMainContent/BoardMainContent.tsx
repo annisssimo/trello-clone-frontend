@@ -28,14 +28,16 @@ const BoardMainContent = () => {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   return (
     <div className={styles.boardMainContentContainer}>
+      {error && <div className="error">{error}</div>}
       {lists.map((list) => (
-        <List key={list.id} title={list.title} />
+        <List
+          key={list.id}
+          id={Number(list.id)}
+          title={list.title}
+          tasks={list.tasks}
+        />
       ))}
       <ListComposerButton />
     </div>

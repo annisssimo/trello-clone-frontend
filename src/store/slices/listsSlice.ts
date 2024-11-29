@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { Task } from '../../types/types';
 
 const initialState: ListsState = {
   lists: [],
@@ -118,7 +119,9 @@ const listsSlice = createSlice({
       })
       .addCase(removeList.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.lists = state.lists.filter((list) => list.id !== action.payload);
+        state.lists = state.lists.filter(
+          (list) => list.id !== Number(action.payload)
+        );
       })
       .addCase(removeList.rejected, (state, action) => {
         state.isLoading = false;
@@ -147,9 +150,10 @@ const listsSlice = createSlice({
 export default listsSlice.reducer;
 
 interface List {
-  id: string;
+  id: number;
   title: string;
   boardId: string;
+  tasks: Task[];
 }
 
 interface ListsState {

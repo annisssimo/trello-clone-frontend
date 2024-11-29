@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 export const composerButton = style({
-  width: '246px',
+  width: '260px',
   padding: '12px',
   borderRadius: '12px',
   backgroundColor: '#f5f5f5',
