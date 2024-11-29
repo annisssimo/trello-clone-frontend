@@ -13,7 +13,7 @@ const AddForm = ({ handleCloseForm, handleSubmit, onChange }: AddFormProps) => {
       />
       <div>
         <button className={styles.addButton} type="submit">
-          Add a list
+          Add
         </button>
         <button
           className={styles.cancelButton}

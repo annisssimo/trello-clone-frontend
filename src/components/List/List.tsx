@@ -13,7 +13,7 @@ const List = ({ id, title, tasks }: ListProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const [isOpen, setIsOpen] = useState(false);
   const [taskTitle, setTaskTitle] = useState('');
-  const [localTasks, setLocalTasks] = useState<TaskType[]>(tasks);
+  const [localTasks, setLocalTasks] = useState<TaskType[]>(tasks || []);
 
   const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setTaskTitle(e.target.value);
@@ -48,9 +48,12 @@ const List = ({ id, title, tasks }: ListProps) => {
   return (
     <div className={styles.listContainer}>
       <span>{title}</span>
-      {localTasks.map((task) => (
-        <Task key={task.id} title={task.title} />
-      ))}
+      {localTasks
+        .slice()
+        .sort((a, b) => a.taskOrder - b.taskOrder)
+        .map((task) => (
+          <Task key={task.id} task={task} />
+        ))}
       {isOpen ? (
         <AddForm
           handleCloseForm={handleCloseForm}

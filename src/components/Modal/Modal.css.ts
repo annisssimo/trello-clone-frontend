@@ -14,6 +14,7 @@ export const modalOverlay = style({
 });
 
 export const modalContent = style({
+  position: 'relative',
   backgroundColor: '#fff',
   padding: '20px',
   borderRadius: '8px',
@@ -22,11 +23,15 @@ export const modalContent = style({
 });
 
 export const closeButton = style({
-  marginTop: '10px',
-  padding: '10px 20px',
-  backgroundColor: '#007bff',
-  color: '#fff',
+  position: 'absolute',
+  top: '10px',
+  right: '10px',
+  padding: '6px 12px',
   border: 'none',
-  borderRadius: '5px',
+  borderRadius: '8px',
+  backgroundColor: 'transparent',
   cursor: 'pointer',
+  ':hover': {
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  },
 });

@@ -59,7 +59,7 @@ const SubHeader = () => {
           title
         )}
       </div>
-      <div className={styles.dots}>...</div>
+      <button className={styles.activityButton}>Show activity</button>
     </div>
   );
 };

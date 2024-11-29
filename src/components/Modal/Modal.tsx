@@ -1,4 +1,6 @@
 import { ReactNode } from 'react';
+import { RxCross2 } from 'react-icons/rx';
+
 import * as styles from './Modal.css';
 
 export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
@@ -7,10 +9,10 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
-        {children}
         <button className={styles.closeButton} onClick={onClose}>
-          Close
+          <RxCross2 />
         </button>
+        {children}
       </div>
     </div>
   );

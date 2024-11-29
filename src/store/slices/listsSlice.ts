@@ -150,6 +150,7 @@ const listsSlice = createSlice({
 export default listsSlice.reducer;
 
 interface List {
+  listOrder: number;
   id: number;
   title: string;
   boardId: string;

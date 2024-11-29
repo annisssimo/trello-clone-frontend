@@ -36,3 +36,14 @@ export const activeBoard = style({
   cursor: 'pointer',
   fontWeight: 'bold',
 });
+
+export const createBoardButton = style({
+  display: 'block',
+  marginTop: '10px',
+  backgroundColor: '#028ad9',
+  color: 'white',
+  padding: '8px 16px',
+  border: 'none',
+  borderRadius: '5px',
+  transition: 'background-color 0.3s ease',
+});

@@ -21,6 +21,8 @@ globalStyle('.flexContainer', {
 
 globalStyle('button', {
   cursor: 'pointer',
+  backgroundColor: 'none',
+  border: 'none',
 });
 
 globalStyle('.error', {

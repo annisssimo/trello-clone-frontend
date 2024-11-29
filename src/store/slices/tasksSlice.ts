@@ -119,7 +119,6 @@ const tasksSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchTasks.fulfilled, (state, action) => {
-        console.log('Загруженные задачи:', action.payload);
         state.isLoading = false;
         state.tasks = action.payload;
       })

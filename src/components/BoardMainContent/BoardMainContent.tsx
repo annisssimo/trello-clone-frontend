@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 import List from '../List/List';
 import ListComposerButton from '../ListComposerButton/ListComposerButton';
 import * as styles from './BoardMainContent.css';
 import { AppDispatch, RootState } from '../../store/store';
-import { useEffect } from 'react';
 import { fetchLists } from '../../store/slices/listsSlice';
 
 const BoardMainContent = () => {
@@ -31,14 +31,17 @@ const BoardMainContent = () => {
   return (
     <div className={styles.boardMainContentContainer}>
       {error && <div className="error">{error}</div>}
-      {lists.map((list) => (
-        <List
-          key={list.id}
-          id={Number(list.id)}
-          title={list.title}
-          tasks={list.tasks}
-        />
-      ))}
+      {lists
+        .slice()
+        .sort((a, b) => a.listOrder - b.listOrder)
+        .map((list) => (
+          <List
+            key={list.id}
+            id={Number(list.id)}
+            title={list.title}
+            tasks={list.tasks || []}
+          />
+        ))}
       <ListComposerButton />
     </div>
   );

@@ -29,9 +29,13 @@ export const input = style({
   background: 'transparent',
 });
 
-export const dots = style({
-  cursor: 'pointer',
-  fontSize: '20px',
-  color: '#888',
-  userSelect: 'none',
+export const activityButton = style({
+  padding: '8px',
+  border: '1px solid #026aa7',
+  borderRadius: '7px',
+  transition: 'background-color 0.3s, padding 0.3s, border-radius 0.3s',
+  ':hover': {
+    backgroundColor: '#026aa7',
+    color: '#fff',
+  },
 });

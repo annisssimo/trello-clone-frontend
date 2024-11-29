@@ -1,18 +1,19 @@
 export interface Task {
-  id: string;
+  taskOrder: number;
+  id: number;
   title: string;
   description?: string;
   listId: number;
 }
 
 export interface List {
-  id: string;
+  id: number;
   title: string;
   tasks: Task[];
 }
 
 export interface Board {
-  id: string;
+  id: number;
   title: string;
   lists?: List[];
 }

@@ -11,6 +11,7 @@ import {
 } from '../../store/slices/boardsSlice';
 import { AppDispatch, RootState } from '../../store/store';
 import { Modal } from '../Modal/Modal';
+import Input from '../Input/Input';
 
 const Sidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -79,14 +80,16 @@ const Sidebar = () => {
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2>Create New Board</h2>
         <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Board Title"
+          <Input
+            id="boardTitle"
             value={newBoardTitle}
             onChange={(e) => setNewBoardTitle(e.target.value)}
+            label="Board Title"
             required
           />
-          <button type="submit">Create Board</button>
+          <button type="submit" className={styles.createBoardButton}>
+            Create Board
+          </button>
         </form>
       </Modal>
     </div>
