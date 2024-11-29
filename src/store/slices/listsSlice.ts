@@ -10,7 +10,7 @@ const initialState: ListsState = {
 
 export const fetchLists = createAsyncThunk(
   'lists/fetchLists',
-  async (boardId: string, { rejectWithValue }) => {
+  async (boardId: number, { rejectWithValue }) => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/lists/${boardId}`

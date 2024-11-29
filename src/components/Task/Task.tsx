@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import * as styles from './Task.css';
 import { Modal } from '../Modal/Modal';
@@ -10,12 +10,29 @@ import { Task as TaskType } from '../../types/types';
 const Task = ({ task }: TaskProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [editedTask, setEditedTask] = useState({
     title: task.title,
     description: task.description || '',
   });
 
+  const [localTask, setLocalTask] = useState({
+    title: task.title,
+    description: task.description || '',
+  });
+
+  useEffect(() => {
+    setEditedTask({
+      title: task.title,
+      description: task.description || '',
+    });
+  }, [task]);
+
   const openEditingModal = () => {
+    setLocalTask({
+      title: editedTask.title,
+      description: editedTask.description,
+    });
     setIsModalOpen(true);
   };
 
@@ -24,10 +41,10 @@ const Task = ({ task }: TaskProps) => {
   };
 
   const handleInputChange =
-    (field: keyof typeof editedTask) =>
+    (field: keyof typeof localTask) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setEditedTask((prevEditedTask) => ({
-        ...prevEditedTask,
+      setLocalTask((prevLocalTask) => ({
+        ...prevLocalTask,
         [field]: event.target.value,
       }));
     };
@@ -38,8 +55,8 @@ const Task = ({ task }: TaskProps) => {
     const resultAction = await dispatch(
       updateTask({
         id: task.id,
-        title: editedTask.title,
-        description: editedTask.description || '',
+        title: localTask.title,
+        description: localTask.description || '',
       })
     );
 
@@ -48,7 +65,7 @@ const Task = ({ task }: TaskProps) => {
         title: resultAction.payload.title,
         description: resultAction.payload.description || '',
       });
-      handleCloseModal();
+      setIsModalOpen(false);
     }
   };
 
@@ -63,14 +80,14 @@ const Task = ({ task }: TaskProps) => {
           <Input
             id="title"
             label="Title"
-            value={editedTask.title}
+            value={localTask.title}
             onChange={handleInputChange('title')}
           />
 
           <Input
             id="description"
             label="Description"
-            value={editedTask.description}
+            value={localTask.description}
             onChange={handleInputChange('description')}
           />
 

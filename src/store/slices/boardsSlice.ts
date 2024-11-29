@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+import { Board } from '../../types/types';
+
 const initialState: BoardsState = {
   boards: [],
   isLoading: false,
@@ -143,7 +145,7 @@ const boardsSlice = createSlice({
       .addCase(deleteBoard.fulfilled, (state, action) => {
         state.isLoading = false;
         state.boards = state.boards.filter(
-          (board) => board.id !== action.payload
+          (board) => board.id !== Number(action.payload)
         );
       })
       .addCase(deleteBoard.rejected, (state, action) => {
@@ -152,11 +154,6 @@ const boardsSlice = createSlice({
       });
   },
 });
-
-interface Board {
-  id: string;
-  title: string;
-}
 
 interface BoardsState {
   boards: Board[];
