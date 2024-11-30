@@ -8,6 +8,7 @@ import { AppDispatch, RootState } from '../../store/store';
 import { createTask, fetchTasks } from '../../store/slices/tasksSlice';
 import Task from '../Task/Task';
 import ListTitle from '../ListTitle/ListTitle';
+import { removeList } from '../../store/slices/listsSlice';
 
 const List = ({ id, title }: ListProps) => {
   const { tasks, isLoading, error } = useSelector(
@@ -50,6 +51,10 @@ const List = ({ id, title }: ListProps) => {
     setIsOpen(false);
   };
 
+  const handleDeleteList = (id: number) => {
+    dispatch(removeList(id));
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -57,7 +62,7 @@ const List = ({ id, title }: ListProps) => {
   return (
     <div className={styles.listContainer}>
       {error && <div className="error">{error}</div>}
-      <ListTitle title={title} listId={id} />
+      <ListTitle title={title} listId={id} onDelete={handleDeleteList} />
       {tasks[id]
         ?.slice()
         ?.sort((a, b) => a.taskOrder - b.taskOrder)

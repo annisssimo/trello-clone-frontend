@@ -1,16 +1,21 @@
 import { useDispatch } from 'react-redux';
-import { BsThreeDots } from 'react-icons/bs';
-
 import { updateList } from '../../store/slices/listsSlice';
-import { AppDispatch } from '../../store/store';
 import EditableText from '../EditableText/EditableText';
+import { ItemMenu } from '../ItemMenu/ItemMenu';
 import * as styles from './ListTitle.css';
+import { AppDispatch } from '../../store/store';
 
-const ListTitle = ({ title, listId }: ListTitleProps) => {
+const ListTitle = ({ title, listId, onDelete }: ListTitleProps) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleSave = (newTitle: string) => {
-    dispatch(updateList({ id: listId, title: newTitle }));
+    if (newTitle.trim() && newTitle !== title) {
+      dispatch(updateList({ id: listId, title: newTitle }));
+    }
+  };
+
+  const handleListDelete = () => {
+    onDelete(listId);
   };
 
   return (
@@ -20,7 +25,11 @@ const ListTitle = ({ title, listId }: ListTitleProps) => {
         onSave={handleSave}
         className={styles.title}
       />
-      <BsThreeDots className={styles.dots} />
+      <ItemMenu
+        title="Delete List"
+        description="Are you sure you want to delete this list?"
+        onConfirm={handleListDelete}
+      />
     </div>
   );
 };
@@ -30,4 +39,5 @@ export default ListTitle;
 interface ListTitleProps {
   title: string;
   listId: number;
+  onDelete: (listId: number) => void;
 }
