@@ -1,10 +1,14 @@
-import { useState, ChangeEvent, KeyboardEvent } from 'react';
+import { useState, ChangeEvent, KeyboardEvent, useEffect } from 'react';
 
 import * as styles from './EditableText.css';
 
 const EditableText = ({ value, onSave, className }: EditableTextProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [localValue, setLocalValue] = useState(value);
+
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
 
   const handleClick = () => setIsEditing(true);
 

@@ -5,7 +5,9 @@ import EditableText from '../EditableText/EditableText';
 import * as styles from './SubHeader.css';
 
 const SubHeader = () => {
-  const { currentBoard } = useSelector((state: RootState) => state.boards);
+  const currentBoard = useSelector(
+    (state: RootState) => state.boards.currentBoard
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   const handleSave = (newTitle: string) => {
