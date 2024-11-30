@@ -103,7 +103,7 @@ const Sidebar = () => {
             label="Board Title"
             required
           />
-          <button type="submit" className={styles.createBoardButton}>
+          <button type="submit" className={styles.saveButton}>
             Create Board
           </button>
         </form>

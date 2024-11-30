@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as styles from './Task.css';
 import { Modal } from '../Modal/Modal';
 import Input from '../Input/Input';
-import { updateTask } from '../../store/slices/tasksSlice';
+import { deleteTask, updateTask } from '../../store/slices/tasksSlice';
 import { AppDispatch, RootState } from '../../store/store';
 import { Task as TaskType } from '../../types/types';
 
@@ -54,6 +54,10 @@ const Task = ({ task, listId }: TaskProps) => {
     }
   };
 
+  const handleDelete = () => {
+    dispatch(deleteTask(task.id));
+  };
+
   return (
     <>
       <div className={styles.taskContainer} onClick={openEditingModal}>
@@ -76,9 +80,18 @@ const Task = ({ task, listId }: TaskProps) => {
             onChange={handleInputChange('description')}
           />
 
-          <button type="submit" className={styles.createBoardButton}>
-            Save
-          </button>
+          <div className={styles.buttonContainer}>
+            <button type="submit" className={styles.saveButton}>
+              Save
+            </button>
+            <button
+              type="button"
+              onClick={handleDelete}
+              className={styles.deleteButton}
+            >
+              Delete
+            </button>
+          </div>
         </form>
       </Modal>
     </>

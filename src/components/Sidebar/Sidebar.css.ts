@@ -35,7 +35,7 @@ export const activeBoard = style({
   fontWeight: 'bold',
 });
 
-export const createBoardButton = style({
+export const saveButton = style({
   display: 'block',
   marginTop: '10px',
   backgroundColor: '#028ad9',
