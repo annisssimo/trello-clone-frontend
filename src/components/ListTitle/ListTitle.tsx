@@ -1,4 +1,6 @@
 import { useDispatch } from 'react-redux';
+import { BsThreeDots } from 'react-icons/bs';
+
 import { updateList } from '../../store/slices/listsSlice';
 import { AppDispatch } from '../../store/store';
 import EditableText from '../EditableText/EditableText';
@@ -12,7 +14,14 @@ const ListTitle = ({ title, listId }: ListTitleProps) => {
   };
 
   return (
-    <EditableText value={title} onSave={handleSave} className={styles.title} />
+    <div className={styles.listTitleContainer}>
+      <EditableText
+        value={title}
+        onSave={handleSave}
+        className={styles.title}
+      />
+      <BsThreeDots className={styles.dots} />
+    </div>
   );
 };
 

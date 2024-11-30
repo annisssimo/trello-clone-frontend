@@ -1,15 +1,19 @@
 import { style } from '@vanilla-extract/css';
 
 export const boardContainer = style({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  padding: '8px 0',
   borderBottom: '1px solid #ddd',
   cursor: 'pointer',
   ':hover': {
-    backgroundColor: '#eee',
+    backgroundColor: '#d6d5d2',
   },
+});
+
+export const board = style({
+  margin: '0 16px',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '3px 0',
 });
 
 export const dotsButton = style({
@@ -17,8 +21,11 @@ export const dotsButton = style({
   border: 'none',
   cursor: 'pointer',
   padding: '4px',
+  height: '28px',
+  width: '28px',
+  borderRadius: '7px',
   ':hover': {
-    color: 'red',
+    backgroundColor: '#b5b0b0',
   },
 });
 

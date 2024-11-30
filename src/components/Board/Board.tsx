@@ -19,23 +19,24 @@ export const Board = ({ title, boardId, onDelete }: BoardProps) => {
 
   return (
     <div className={styles.boardContainer}>
-      <span>{title}</span>
-      <button onClick={handleOpenModal} className={styles.dotsButton}>
-        <BsThreeDots size={16} />
-      </button>
-
-      {isModalOpen && (
-        <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-          <h3>Delete Board</h3>
-          <p>Are you sure you want to delete this board?</p>
-          <button onClick={handleDelete} className={styles.deleteButton}>
-            Delete
-          </button>
-          <button onClick={handleCloseModal} className={styles.cancelButton}>
-            Cancel
-          </button>
-        </Modal>
-      )}
+      <div className={styles.board}>
+        <span>{title}</span>
+        <button onClick={handleOpenModal} className={styles.dotsButton}>
+          <BsThreeDots size={16} />
+        </button>
+        {isModalOpen && (
+          <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+            <h3>Delete Board</h3>
+            <p>Are you sure you want to delete this board?</p>
+            <button onClick={handleDelete} className={styles.deleteButton}>
+              Delete
+            </button>
+            <button onClick={handleCloseModal} className={styles.cancelButton}>
+              Cancel
+            </button>
+          </Modal>
+        )}
+      </div>
     </div>
   );
 };

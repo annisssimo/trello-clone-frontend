@@ -4,7 +4,7 @@ export const subHeader = style({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  backgroundColor: '#f4f4f4',
+  backgroundColor: '#d9d7d2',
   padding: '10px 20px',
   borderBottom: '2px solid #ddd',
   fontSize: '16px',

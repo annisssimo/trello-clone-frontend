@@ -2,9 +2,8 @@ import { style } from '@vanilla-extract/css';
 
 export const sidebarContainer = style({
   width: '233px',
-  padding: '16px',
   borderRight: '1px solid #ddd',
-  backgroundColor: '#f9f9f9',
+  backgroundColor: '#f9f9f9c2',
   height: '100vh',
   flexShrink: '0',
 });
@@ -13,7 +12,7 @@ export const header = style({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  marginBottom: '16px',
+  margin: '16px',
   fontSize: '18px',
   fontWeight: 'bold',
 });
@@ -32,8 +31,7 @@ export const plusButton = style({
 });
 
 export const activeBoard = style({
-  backgroundColor: '#f0f0f0',
-  cursor: 'pointer',
+  backgroundColor: '#c9c8c4',
   fontWeight: 'bold',
 });
 

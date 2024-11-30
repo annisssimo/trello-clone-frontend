@@ -65,29 +65,33 @@ const Sidebar = () => {
   }
 
   return (
-    <div className={styles.sidebarContainer}>
-      <div className={styles.header}>
-        <span>My Boards</span>
-        <button className={styles.plusButton} onClick={handleAddBoard}>
-          +
-        </button>
+    <>
+      <div className={styles.sidebarContainer}>
+        <div className={styles.header}>
+          <span>My Boards</span>
+          <button className={styles.plusButton} onClick={handleAddBoard}>
+            +
+          </button>
+        </div>
+        {error && <div className="error">{error}</div>}
+        <ul className={styles.boardList}>
+          {boards.map((board: BoardType) => (
+            <li
+              key={board.id}
+              className={
+                currentBoard?.id === board.id ? styles.activeBoard : ''
+              }
+              onClick={() => handleSelectBoard(board)}
+            >
+              <Board
+                title={board.title}
+                boardId={board.id}
+                onDelete={handleDeleteBoard}
+              />
+            </li>
+          ))}
+        </ul>
       </div>
-      {error && <div className="error">{error}</div>}
-      <ul className={styles.boardList}>
-        {boards.map((board: BoardType) => (
-          <li
-            key={board.id}
-            className={currentBoard?.id === board.id ? styles.activeBoard : ''}
-            onClick={() => handleSelectBoard(board)}
-          >
-            <Board
-              title={board.title}
-              boardId={board.id}
-              onDelete={handleDeleteBoard}
-            />
-          </li>
-        ))}
-      </ul>
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2>Create New Board</h2>
@@ -104,7 +108,7 @@ const Sidebar = () => {
           </button>
         </form>
       </Modal>
-    </div>
+    </>
   );
 };
 

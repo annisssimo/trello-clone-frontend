@@ -17,6 +17,9 @@ globalStyle('body', {
 
 globalStyle('.flexContainer', {
   display: 'flex',
+  backgroundImage: 'url("/public/background.jpg")',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
 });
 
 globalStyle('button', {

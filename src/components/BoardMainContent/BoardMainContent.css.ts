@@ -10,5 +10,4 @@ export const boardMainContentContainer = style({
   whiteSpace: 'nowrap',
   boxSizing: 'border-box',
   maxWidth: 'calc(100vw - 233px)',
-  height: '100%',
 });
