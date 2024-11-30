@@ -8,10 +8,12 @@ import {
   fetchBoards,
   createBoard,
   setCurrentBoard,
+  deleteBoard,
 } from '../../store/slices/boardsSlice';
 import { AppDispatch, RootState } from '../../store/store';
 import { Modal } from '../Modal/Modal';
 import Input from '../Input/Input';
+import { removeListsByBoardId } from '../../store/slices/listsSlice';
 
 const Sidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -52,6 +54,12 @@ const Sidebar = () => {
     dispatch(setCurrentBoard(board));
   };
 
+  const handleDeleteBoard = (boardId: number) => {
+    dispatch(deleteBoard(boardId)).then(() => {
+      dispatch(removeListsByBoardId(boardId));
+    });
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -72,7 +80,11 @@ const Sidebar = () => {
             className={currentBoard?.id === board.id ? styles.activeBoard : ''}
             onClick={() => handleSelectBoard(board)}
           >
-            <Board title={board.title} />
+            <Board
+              title={board.title}
+              boardId={board.id}
+              onDelete={handleDeleteBoard}
+            />
           </li>
         ))}
       </ul>

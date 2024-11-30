@@ -144,9 +144,15 @@ const boardsSlice = createSlice({
       })
       .addCase(deleteBoard.fulfilled, (state, action) => {
         state.isLoading = false;
+        const deletedBoardId = Number(action.payload);
+
         state.boards = state.boards.filter(
-          (board) => board.id !== Number(action.payload)
+          (board) => board.id !== deletedBoardId
         );
+
+        if (state.currentBoard?.id === deletedBoardId) {
+          state.currentBoard = state.boards.length > 0 ? state.boards[0] : null;
+        }
       })
       .addCase(deleteBoard.rejected, (state, action) => {
         state.isLoading = false;

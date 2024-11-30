@@ -71,7 +71,7 @@ const List = ({ id, title }: ListProps) => {
           onChange={onChange}
         />
       ) : (
-        <Button onClick={handleOpenForm}>+ Add a task</Button>
+        <Button onClick={handleOpenForm}>+ Add a card</Button>
       )}
     </div>
   );

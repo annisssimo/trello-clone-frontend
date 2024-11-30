@@ -84,7 +84,12 @@ export const updateList = createAsyncThunk(
 const listsSlice = createSlice({
   name: 'lists',
   initialState,
-  reducers: {},
+  reducers: {
+    removeListsByBoardId: (state, action) => {
+      const boardId = action.payload;
+      state.lists = state.lists.filter((list) => list.boardId !== boardId);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchLists.pending, (state) => {
@@ -145,6 +150,8 @@ const listsSlice = createSlice({
       });
   },
 });
+
+export const { removeListsByBoardId } = listsSlice.actions;
 
 export default listsSlice.reducer;
 
