@@ -1,19 +1,21 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ChangeEvent, FormEvent, useState } from 'react';
 
 import * as styles from './List.css';
 import Button from '../Button/Button';
 import AddForm from '../AddForm/AddForm';
-import { AppDispatch } from '../../store/store';
+import { AppDispatch, RootState } from '../../store/store';
 import { createTask } from '../../store/slices/tasksSlice';
 import Task from '../Task/Task';
-import { Task as TaskType } from '../../types/types';
 
-const List = ({ id, title, tasks }: ListProps) => {
+const List = ({ id, title }: ListProps) => {
+  const tasks = useSelector((state: RootState) =>
+    state.tasks.tasks.filter((task: { listId: number }) => task.listId === id)
+  );
+
   const dispatch = useDispatch<AppDispatch>();
   const [isOpen, setIsOpen] = useState(false);
   const [taskTitle, setTaskTitle] = useState('');
-  const [localTasks, setLocalTasks] = useState<TaskType[]>(tasks || []);
 
   const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setTaskTitle(e.target.value);
@@ -28,8 +30,6 @@ const List = ({ id, title, tasks }: ListProps) => {
       );
 
       if (createTask.fulfilled.match(resultAction)) {
-        const newTask = resultAction.payload;
-        setLocalTasks((prevTasks) => [...prevTasks, newTask]);
         setTaskTitle('');
       }
 
@@ -48,7 +48,7 @@ const List = ({ id, title, tasks }: ListProps) => {
   return (
     <div className={styles.listContainer}>
       <span>{title}</span>
-      {localTasks
+      {tasks
         .slice()
         .sort((a, b) => a.taskOrder - b.taskOrder)
         .map((task) => (
@@ -72,5 +72,4 @@ export default List;
 interface ListProps {
   id: number;
   title: string;
-  tasks: TaskType[];
 }

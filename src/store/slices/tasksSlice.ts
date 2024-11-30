@@ -120,7 +120,7 @@ const tasksSlice = createSlice({
       })
       .addCase(fetchTasks.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.tasks = action.payload;
+        state.tasks = [...state.tasks, ...action.payload];
       })
       .addCase(fetchTasks.rejected, (state, action) => {
         state.isLoading = false;
@@ -185,6 +185,7 @@ const tasksSlice = createSlice({
 export default tasksSlice.reducer;
 
 interface Task {
+  taskOrder: number;
   id: number;
   title: string;
   description?: string;

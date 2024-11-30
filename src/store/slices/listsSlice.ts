@@ -48,7 +48,7 @@ export const addList = createAsyncThunk(
 
 export const removeList = createAsyncThunk(
   'lists/removeList',
-  async (listId: string, { rejectWithValue }) => {
+  async (listId: number, { rejectWithValue }) => {
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/lists/${listId}`);
       return listId;
@@ -63,7 +63,7 @@ export const removeList = createAsyncThunk(
 
 export const updateList = createAsyncThunk(
   'lists/updateList',
-  async (updateData: { id: string; title: string }, { rejectWithValue }) => {
+  async (updateData: { id: number; title: string }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
         `${import.meta.env.VITE_API_URL}/lists/${updateData.id}`,
@@ -106,7 +106,8 @@ const listsSlice = createSlice({
       })
       .addCase(addList.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.lists.push(action.payload);
+        const newList = { ...action.payload, tasks: [] };
+        state.lists.push(newList);
       })
       .addCase(addList.rejected, (state, action) => {
         state.isLoading = false;

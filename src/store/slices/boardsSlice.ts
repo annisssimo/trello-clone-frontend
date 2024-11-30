@@ -47,7 +47,7 @@ export const createBoard = createAsyncThunk(
 
 export const updateBoard = createAsyncThunk(
   'boards/updateBoard',
-  async ({ id, title }: { id: string; title: string }, { rejectWithValue }) => {
+  async ({ id, title }: { id: number; title: string }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
         `${import.meta.env.VITE_API_URL}/boards/${id}`,
@@ -67,7 +67,7 @@ export const updateBoard = createAsyncThunk(
 
 export const deleteBoard = createAsyncThunk(
   'boards/deleteBoard',
-  async (id: string, { rejectWithValue }) => {
+  async (id: number, { rejectWithValue }) => {
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/boards/${id}`);
       return id;

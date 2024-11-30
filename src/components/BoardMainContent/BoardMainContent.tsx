@@ -6,6 +6,7 @@ import ListComposerButton from '../ListComposerButton/ListComposerButton';
 import * as styles from './BoardMainContent.css';
 import { AppDispatch, RootState } from '../../store/store';
 import { fetchLists } from '../../store/slices/listsSlice';
+import { fetchTasks } from '../../store/slices/tasksSlice';
 
 const BoardMainContent = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,7 +21,16 @@ const BoardMainContent = () => {
 
   useEffect(() => {
     if (currentBoard) {
-      dispatch(fetchLists(currentBoard.id));
+      dispatch(fetchLists(currentBoard.id))
+        .unwrap()
+        .then((lists) => {
+          lists.forEach((list: { id: number }) => {
+            dispatch(fetchTasks(list.id));
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   }, [dispatch, currentBoard]);
 
@@ -35,12 +45,7 @@ const BoardMainContent = () => {
         .slice()
         .sort((a, b) => a.listOrder - b.listOrder)
         .map((list) => (
-          <List
-            key={list.id}
-            id={Number(list.id)}
-            title={list.title}
-            tasks={list.tasks || []}
-          />
+          <List key={list.id} id={Number(list.id)} title={list.title} />
         ))}
       <ListComposerButton />
     </div>

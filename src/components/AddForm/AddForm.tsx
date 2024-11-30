@@ -8,7 +8,7 @@ const AddForm = ({ handleCloseForm, handleSubmit, onChange }: AddFormProps) => {
     <form className={styles.formContainer} onSubmit={handleSubmit}>
       <textarea
         className={styles.textArea}
-        placeholder="Enter column name…"
+        placeholder="Enter name…"
         onChange={onChange}
       />
       <div>

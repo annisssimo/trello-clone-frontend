@@ -1,44 +1,34 @@
-import { FormEvent, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { FormEvent, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import * as styles from './Task.css';
 import { Modal } from '../Modal/Modal';
 import Input from '../Input/Input';
 import { updateTask } from '../../store/slices/tasksSlice';
-import { AppDispatch } from '../../store/store';
+import { AppDispatch, RootState } from '../../store/store';
 import { Task as TaskType } from '../../types/types';
 
 const Task = ({ task }: TaskProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [editedTask, setEditedTask] = useState({
-    title: task.title,
-    description: task.description || '',
-  });
-
-  const [localTask, setLocalTask] = useState({
-    title: task.title,
-    description: task.description || '',
-  });
-
-  useEffect(() => {
-    setEditedTask({
-      title: task.title,
-      description: task.description || '',
-    });
-  }, [task]);
+  // Получаем актуальные данные задачи из глобального состояния Redux
+  const updatedTask =
+    useSelector((state: RootState) =>
+      state.tasks.tasks.find((t) => t.id === task.id)
+    ) || task;
 
   const openEditingModal = () => {
-    setLocalTask({
-      title: editedTask.title,
-      description: editedTask.description,
-    });
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  const [localTask, setLocalTask] = useState({
+    title: updatedTask.title,
+    description: updatedTask.description || '',
+  });
 
   const handleInputChange =
     (field: keyof typeof localTask) =>
@@ -61,10 +51,6 @@ const Task = ({ task }: TaskProps) => {
     );
 
     if (updateTask.fulfilled.match(resultAction)) {
-      setEditedTask({
-        title: resultAction.payload.title,
-        description: resultAction.payload.description || '',
-      });
       setIsModalOpen(false);
     }
   };
@@ -72,7 +58,7 @@ const Task = ({ task }: TaskProps) => {
   return (
     <>
       <div className={styles.taskContainer} onClick={openEditingModal}>
-        {editedTask.title}
+        {updatedTask.title}
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2>Edit Task</h2>
