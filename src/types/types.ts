@@ -1,19 +1,21 @@
-export interface Task {
-  taskOrder: number;
+export interface Board {
   id: number;
   title: string;
-  description?: string;
-  listId: number;
 }
 
 export interface List {
   id: number;
   title: string;
-  tasks: Task[];
+  boardId: number;
+  listOrder: number;
 }
 
-export interface Board {
+export interface Task {
   id: number;
   title: string;
-  lists?: List[];
+  description?: string;
+  listId: number;
+  taskOrder: number;
 }
+
+export type TaskList = Record<number, Task[]>;

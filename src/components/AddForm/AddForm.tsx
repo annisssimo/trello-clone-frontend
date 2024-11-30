@@ -10,6 +10,7 @@ const AddForm = ({ handleCloseForm, handleSubmit, onChange }: AddFormProps) => {
         className={styles.textArea}
         placeholder="Enter name…"
         onChange={onChange}
+        autoFocus
       />
       <div>
         <button className={styles.addButton} type="submit">

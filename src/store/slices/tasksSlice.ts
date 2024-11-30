@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { TaskList } from '../../types/types';
 
 const initialState: TasksState = {
   tasks: [],
@@ -14,7 +15,7 @@ export const fetchTasks = createAsyncThunk(
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/tasks/${listId}`
       );
-      return response.data;
+      return { listId, data: response.data };
     } catch (err) {
       if (err instanceof Error) {
         return rejectWithValue(err.message);
@@ -120,7 +121,10 @@ const tasksSlice = createSlice({
       })
       .addCase(fetchTasks.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.tasks = [...state.tasks, ...action.payload];
+        state.tasks = {
+          ...state.tasks,
+          [action.payload.listId]: action.payload.data,
+        };
       })
       .addCase(fetchTasks.rejected, (state, action) => {
         state.isLoading = false;
@@ -132,7 +136,13 @@ const tasksSlice = createSlice({
       })
       .addCase(createTask.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.tasks.push(action.payload);
+        state.tasks = {
+          ...state.tasks,
+          [action.payload.listId]: [
+            ...(state.tasks?.[action.payload.listId] || []),
+            action.payload,
+          ],
+        };
       })
       .addCase(createTask.rejected, (state, action) => {
         state.isLoading = false;
@@ -145,11 +155,10 @@ const tasksSlice = createSlice({
       .addCase(updateTask.fulfilled, (state, action) => {
         state.isLoading = false;
         const updatedTask = action.payload;
-        const index = state.tasks.findIndex(
-          (task) => task.id === updatedTask.id
-        );
+        const tasks = state.tasks[updatedTask.listId];
+        const index = tasks?.findIndex((task) => task.id === updatedTask.id);
         if (index !== -1) {
-          state.tasks[index] = updatedTask;
+          tasks[index] = updatedTask;
         }
       })
       .addCase(updateTask.rejected, (state, action) => {
@@ -162,7 +171,11 @@ const tasksSlice = createSlice({
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.tasks = state.tasks.filter((task) => task.id !== action.payload);
+        for (const listId in state.tasks) {
+          state.tasks[listId] = state.tasks[listId].filter(
+            (task) => task.id !== action.payload
+          );
+        }
       })
       .addCase(deleteTask.rejected, (state, action) => {
         state.isLoading = false;
@@ -184,16 +197,8 @@ const tasksSlice = createSlice({
 
 export default tasksSlice.reducer;
 
-interface Task {
-  taskOrder: number;
-  id: number;
-  title: string;
-  description?: string;
-  listId: number;
-}
-
 interface TasksState {
-  tasks: Task[];
+  tasks: TaskList;
   isLoading: boolean;
   error: string | null;
 }

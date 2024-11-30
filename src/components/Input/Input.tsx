@@ -19,6 +19,7 @@ const Input = ({
         value={value}
         onChange={onChange}
         required={required}
+        autoFocus
         {...props}
       />
     </div>

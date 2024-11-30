@@ -1,21 +1,26 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 
 import * as styles from './List.css';
 import Button from '../Button/Button';
 import AddForm from '../AddForm/AddForm';
 import { AppDispatch, RootState } from '../../store/store';
-import { createTask } from '../../store/slices/tasksSlice';
+import { createTask, fetchTasks } from '../../store/slices/tasksSlice';
 import Task from '../Task/Task';
+import ListTitle from '../ListTitle/ListTitle';
 
 const List = ({ id, title }: ListProps) => {
-  const tasks = useSelector((state: RootState) =>
-    state.tasks.tasks.filter((task: { listId: number }) => task.listId === id)
+  const { tasks, isLoading, error } = useSelector(
+    (state: RootState) => state.tasks
   );
 
   const dispatch = useDispatch<AppDispatch>();
   const [isOpen, setIsOpen] = useState(false);
   const [taskTitle, setTaskTitle] = useState('');
+
+  useEffect(() => {
+    dispatch(fetchTasks(id));
+  }, [dispatch, id]);
 
   const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setTaskTitle(e.target.value);
@@ -45,14 +50,19 @@ const List = ({ id, title }: ListProps) => {
     setIsOpen(false);
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className={styles.listContainer}>
-      <span>{title}</span>
-      {tasks
-        .slice()
-        .sort((a, b) => a.taskOrder - b.taskOrder)
-        .map((task) => (
-          <Task key={task.id} task={task} />
+      {error && <div className="error">{error}</div>}
+      <ListTitle title={title} listId={id} />
+      {tasks[id]
+        ?.slice()
+        ?.sort((a, b) => a.taskOrder - b.taskOrder)
+        ?.map((task) => (
+          <Task key={task.id} task={task} listId={id} />
         ))}
       {isOpen ? (
         <AddForm

@@ -23,12 +23,6 @@ export const title = style({
   },
 });
 
-export const input = style({
-  fontSize: '24px',
-  border: 'none',
-  background: 'transparent',
-});
-
 export const activityButton = style({
   padding: '8px',
   border: '1px solid #026aa7',

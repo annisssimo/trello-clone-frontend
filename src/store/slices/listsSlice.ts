@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { Task } from '../../types/types';
+import { List } from '../../types/types';
 
 const initialState: ListsState = {
   lists: [],
@@ -27,7 +27,7 @@ export const fetchLists = createAsyncThunk(
 
 export const addList = createAsyncThunk(
   'lists/addList',
-  async (newList: Omit<List, 'id'>, { rejectWithValue }) => {
+  async (newList: Omit<List, 'id' | 'listOrder'>, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/lists`,
@@ -99,15 +99,13 @@ const listsSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
       })
-
       .addCase(addList.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
       .addCase(addList.fulfilled, (state, action) => {
         state.isLoading = false;
-        const newList = { ...action.payload, tasks: [] };
-        state.lists.push(newList);
+        state.lists.push(action.payload);
       })
       .addCase(addList.rejected, (state, action) => {
         state.isLoading = false;
@@ -149,14 +147,6 @@ const listsSlice = createSlice({
 });
 
 export default listsSlice.reducer;
-
-interface List {
-  listOrder: number;
-  id: number;
-  title: string;
-  boardId: string;
-  tasks: Task[];
-}
 
 interface ListsState {
   lists: List[];

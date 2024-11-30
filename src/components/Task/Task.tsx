@@ -7,15 +7,14 @@ import { updateTask } from '../../store/slices/tasksSlice';
 import { AppDispatch, RootState } from '../../store/store';
 import { Task as TaskType } from '../../types/types';
 
-const Task = ({ task }: TaskProps) => {
+const Task = ({ task, listId }: TaskProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Получаем актуальные данные задачи из глобального состояния Redux
-  const updatedTask =
-    useSelector((state: RootState) =>
-      state.tasks.tasks.find((t) => t.id === task.id)
-    ) || task;
+  const updatedTask = useSelector(
+    (state: RootState) =>
+      state.tasks.tasks[listId]?.find((t) => t.id === task.id) || task
+  );
 
   const openEditingModal = () => {
     setIsModalOpen(true);
@@ -90,4 +89,5 @@ export default Task;
 
 interface TaskProps {
   task: TaskType;
+  listId: number;
 }

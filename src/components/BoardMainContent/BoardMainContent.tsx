@@ -47,7 +47,7 @@ const BoardMainContent = () => {
         .map((list) => (
           <List key={list.id} id={Number(list.id)} title={list.title} />
         ))}
-      <ListComposerButton />
+      {currentBoard && <ListComposerButton />}
     </div>
   );
 };

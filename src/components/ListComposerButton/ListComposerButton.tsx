@@ -27,7 +27,6 @@ const ListComposerButton = () => {
         addList({
           title: listName,
           boardId: currentBoard.id,
-          tasks: [],
         })
       );
       handleCloseForm();
