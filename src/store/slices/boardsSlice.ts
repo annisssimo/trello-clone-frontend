@@ -22,7 +22,6 @@ export const fetchBoards = createAsyncThunk(
       if (err instanceof Error) {
         return rejectWithValue(err.message);
       }
-      return rejectWithValue('Unknown error');
     }
   }
 );
@@ -40,7 +39,6 @@ export const createBoard = createAsyncThunk(
       if (err instanceof Error) {
         return rejectWithValue(err.message);
       }
-      return rejectWithValue('Unknown error');
     }
   }
 );
@@ -60,7 +58,6 @@ export const updateBoard = createAsyncThunk(
       if (err instanceof Error) {
         return rejectWithValue(err.message);
       }
-      return rejectWithValue('Unknown error');
     }
   }
 );
@@ -75,7 +72,6 @@ export const deleteBoard = createAsyncThunk(
       if (err instanceof Error) {
         return rejectWithValue(err.message);
       }
-      return rejectWithValue('Unknown error');
     }
   }
 );

@@ -19,3 +19,8 @@ export interface Task {
 }
 
 export type TaskList = Record<number, Task[]>;
+
+export interface Log {
+  action: string;
+  date: string;
+}
