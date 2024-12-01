@@ -1,5 +1,7 @@
 import { FormEvent, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useDrag, useDrop } from 'react-dnd';
+
 import * as styles from './Task.css';
 import { Modal } from '../Modal/Modal';
 import Input from '../Input/Input';
@@ -7,7 +9,24 @@ import { deleteTask, updateTask } from '../../store/slices/tasksSlice';
 import { AppDispatch, RootState } from '../../store/store';
 import { Task as TaskType } from '../../types/types';
 
-const Task = ({ task, listId }: TaskProps) => {
+const Task = ({ task, listId, moveTask }: TaskProps) => {
+  const [{ isDragging }, dragRef] = useDrag({
+    type: 'TASK',
+    item: { id: task.id, listId },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  const [, dropRef] = useDrop({
+    accept: 'TASK',
+    drop: (item: { id: number; listId: number }) => {
+      if (item.id !== task.id) {
+        moveTask(item.id, item.listId, task.id, listId);
+      }
+    },
+  });
+
   const dispatch = useDispatch<AppDispatch>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -60,7 +79,12 @@ const Task = ({ task, listId }: TaskProps) => {
 
   return (
     <>
-      <div className={styles.taskContainer} onClick={openEditingModal}>
+      <div
+        ref={(node) => dragRef(dropRef(node))}
+        className={styles.taskContainer}
+        style={{ opacity: isDragging ? 0.5 : 1 }}
+        onClick={openEditingModal}
+      >
         {updatedTask.title}
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
@@ -103,4 +127,10 @@ export default Task;
 interface TaskProps {
   task: TaskType;
   listId: number;
+  moveTask: (
+    draggedTaskId: number,
+    fromListId: number,
+    targetTaskId: number,
+    toListId: number
+  ) => void;
 }

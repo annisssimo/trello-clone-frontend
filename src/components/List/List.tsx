@@ -5,7 +5,12 @@ import * as styles from './List.css';
 import Button from '../Button/Button';
 import AddForm from '../AddForm/AddForm';
 import { AppDispatch, RootState } from '../../store/store';
-import { createTask, fetchTasks } from '../../store/slices/tasksSlice';
+import {
+  createTask,
+  fetchTasks,
+  moveTaskToList,
+  reorderTasks,
+} from '../../store/slices/tasksSlice';
 import Task from '../Task/Task';
 import ListTitle from '../ListTitle/ListTitle';
 import { removeList } from '../../store/slices/listsSlice';
@@ -16,6 +21,36 @@ const List = ({ id, title }: ListProps) => {
   );
 
   const dispatch = useDispatch<AppDispatch>();
+
+  const moveTask = async (
+    draggedTaskId: number,
+    fromListId: number,
+    targetTaskId: number,
+    toListId: number
+  ) => {
+    if (fromListId === toListId) {
+      // Обработка перемещения задачи внутри одного списка
+      const taskIds = tasks[fromListId].map((task) => task.id);
+
+      const draggedIndex = taskIds.indexOf(draggedTaskId);
+      const targetIndex = taskIds.indexOf(targetTaskId);
+
+      const [removed] = taskIds.splice(draggedIndex, 1);
+      taskIds.splice(targetIndex, 0, removed);
+
+      dispatch(reorderTasks({ listId: fromListId, orderedTaskIds: taskIds }));
+    } else {
+      await dispatch(
+        moveTaskToList({
+          taskId: draggedTaskId,
+          fromListId,
+          toListId,
+          targetTaskId,
+        })
+      );
+    }
+  };
+
   const [isOpen, setIsOpen] = useState(false);
   const [taskTitle, setTaskTitle] = useState('');
 
@@ -64,10 +99,10 @@ const List = ({ id, title }: ListProps) => {
       {error && <div className="error">{error}</div>}
       <ListTitle title={title} listId={id} onDelete={handleDeleteList} />
       {tasks[id]
-        ?.slice()
-        ?.sort((a, b) => a.taskOrder - b.taskOrder)
+        // ?.slice()
+        // ?.sort((a, b) => a.taskOrder - b.taskOrder)
         ?.map((task) => (
-          <Task key={task.id} task={task} listId={id} />
+          <Task key={task.id} task={task} listId={id} moveTask={moveTask} />
         ))}
       {isOpen ? (
         <AddForm

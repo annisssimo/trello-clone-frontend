@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { TaskList } from '../../types/types';
+import { Task, TaskList } from '../../types/types';
 
 const initialState: TasksState = {
   tasks: [],
@@ -109,6 +109,47 @@ export const reorderTasks = createAsyncThunk(
   }
 );
 
+export const moveTaskToList = createAsyncThunk(
+  'tasks/moveTaskToList',
+  async (
+    {
+      taskId,
+      fromListId,
+      toListId,
+      targetTaskId,
+    }: {
+      taskId: number;
+      fromListId: number;
+      toListId: number;
+      targetTaskId: number | null;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}/tasks/move`,
+        {
+          taskId,
+          fromListId,
+          toListId,
+          targetTaskId,
+        }
+      );
+      return {
+        taskId,
+        fromListId,
+        toListId,
+        updatedLists: response.data.updatedLists,
+      };
+    } catch (err) {
+      if (err instanceof Error) {
+        return rejectWithValue(err.message);
+      }
+      return rejectWithValue('Unknown error');
+    }
+  }
+);
+
 const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
@@ -181,15 +222,28 @@ const tasksSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
       })
-      .addCase(reorderTasks.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(reorderTasks.fulfilled, (state) => {
-        state.isLoading = false;
+      .addCase(reorderTasks.fulfilled, (state, action) => {
+        const { listId, orderedTaskIds } = action.meta.arg;
+
+        const currentTasks = state.tasks[listId] || [];
+
+        const updatedTasks = orderedTaskIds
+          .map((id) => currentTasks.find((task) => task.id === id))
+          .filter((task): task is Task => task !== undefined);
+
+        state.tasks[listId] = updatedTasks;
       })
       .addCase(reorderTasks.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(moveTaskToList.fulfilled, (state, action) => {
+        const { fromListId, toListId, updatedLists } = action.payload;
+
+        state.tasks[fromListId] = updatedLists[fromListId];
+        state.tasks[toListId] = updatedLists[toListId];
+      })
+      .addCase(moveTaskToList.rejected, (state, action) => {
         state.error = action.payload as string;
       });
   },
