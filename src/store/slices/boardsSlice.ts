@@ -1,14 +1,51 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-import { Board } from '../../types/types';
+import { Board, List, Task } from '../../types/types';
+import { setLists } from './listsSlice';
+import { setTasks } from './tasksSlice';
 
 const initialState: BoardsState = {
   boards: [],
   isLoading: false,
   error: null,
   currentBoard: null,
+  isBoardLoaded: false,
 };
+
+export const fetchBoardWithListsAndTasks = createAsyncThunk(
+  'boards/fetchBoardWithListsAndTasks',
+  async (boardId: number, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/boards/${boardId}`
+      );
+
+      const boardData = response.data;
+
+      const initialAccumulator: { [key: number]: Task[] } = {};
+      const tasksByList = boardData.lists.reduce(
+        (acc: { [key: number]: Task[] }, list: List) => {
+          acc[list.id] = list.tasks || [];
+          return acc;
+        },
+        initialAccumulator
+      );
+
+      dispatch(setCurrentBoard(boardData));
+      dispatch(setLists(boardData.lists));
+      dispatch(setTasks(tasksByList));
+      dispatch(setIsBoardLoaded(true));
+
+      return boardData;
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('Unknown error');
+    }
+  }
+);
 
 export const fetchBoards = createAsyncThunk(
   'boards/fetchBoards',
@@ -83,9 +120,22 @@ const boardsSlice = createSlice({
     setCurrentBoard: (state, action: PayloadAction<Board | null>) => {
       state.currentBoard = action.payload;
     },
+    setIsBoardLoaded: (state, action: PayloadAction<boolean>) => {
+      state.isBoardLoaded = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchBoardWithListsAndTasks.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchBoardWithListsAndTasks.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(fetchBoardWithListsAndTasks.rejected, (state) => {
+        state.isLoading = false;
+      })
+
       .addCase(fetchBoards.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -162,8 +212,9 @@ interface BoardsState {
   isLoading: boolean;
   error: string | null;
   currentBoard: Board | null;
+  isBoardLoaded: boolean;
 }
 
-export const { setCurrentBoard } = boardsSlice.actions;
+export const { setCurrentBoard, setIsBoardLoaded } = boardsSlice.actions;
 
 export default boardsSlice.reducer;

@@ -8,6 +8,7 @@ export interface List {
   title: string;
   boardId: number;
   listOrder: number;
+  tasks?: Task[];
 }
 
 export interface Task {

@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { List } from '../../types/types';
 
@@ -85,6 +85,12 @@ const listsSlice = createSlice({
   name: 'lists',
   initialState,
   reducers: {
+    setLists: (state, action: PayloadAction<List[]>) => {
+      state.lists = action.payload;
+    },
+    clearLists: (state) => {
+      state.lists = [];
+    },
     removeListsByBoardId: (state, action) => {
       const boardId = action.payload;
       state.lists = state.lists.filter((list) => list.boardId !== boardId);
@@ -151,7 +157,8 @@ const listsSlice = createSlice({
   },
 });
 
-export const { removeListsByBoardId } = listsSlice.actions;
+export const { setLists, clearLists, removeListsByBoardId } =
+  listsSlice.actions;
 
 export default listsSlice.reducer;
 

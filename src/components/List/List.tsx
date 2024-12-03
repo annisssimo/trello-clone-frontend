@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 
 import * as styles from './List.css';
 import Button from '../Button/Button';
@@ -7,7 +7,6 @@ import AddForm from '../AddForm/AddForm';
 import { AppDispatch, RootState } from '../../store/store';
 import {
   createTask,
-  fetchTasks,
   moveTaskToList,
   reorderTasks,
 } from '../../store/slices/tasksSlice';
@@ -29,7 +28,6 @@ const List = ({ id, title }: ListProps) => {
     toListId: number
   ) => {
     if (fromListId === toListId) {
-      // Обработка перемещения задачи внутри одного списка
       const taskIds = tasks[fromListId].map((task) => task.id);
 
       const draggedIndex = taskIds.indexOf(draggedTaskId);
@@ -53,10 +51,6 @@ const List = ({ id, title }: ListProps) => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [taskTitle, setTaskTitle] = useState('');
-
-  useEffect(() => {
-    dispatch(fetchTasks(id));
-  }, [dispatch, id]);
 
   const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setTaskTitle(e.target.value);
@@ -98,12 +92,9 @@ const List = ({ id, title }: ListProps) => {
     <div className={styles.listContainer}>
       {error && <div className="error">{error}</div>}
       <ListTitle title={title} listId={id} onDelete={handleDeleteList} />
-      {tasks[id]
-        // ?.slice()
-        // ?.sort((a, b) => a.taskOrder - b.taskOrder)
-        ?.map((task) => (
-          <Task key={task.id} task={task} listId={id} moveTask={moveTask} />
-        ))}
+      {tasks[id]?.map((task) => (
+        <Task key={task.id} task={task} listId={id} moveTask={moveTask} />
+      ))}
       {isOpen ? (
         <AddForm
           handleCloseForm={handleCloseForm}

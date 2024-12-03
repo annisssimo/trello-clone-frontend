@@ -5,8 +5,7 @@ import List from '../List/List';
 import ListComposerButton from '../ListComposerButton/ListComposerButton';
 import * as styles from './BoardMainContent.css';
 import { AppDispatch, RootState } from '../../store/store';
-import { fetchLists } from '../../store/slices/listsSlice';
-import { fetchTasks } from '../../store/slices/tasksSlice';
+import { fetchBoardWithListsAndTasks } from '../../store/slices/boardsSlice';
 
 const BoardMainContent = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -14,25 +13,15 @@ const BoardMainContent = () => {
   const { lists, isLoading, error } = useSelector(
     (state: RootState) => state.lists
   );
-
-  const currentBoard = useSelector(
-    (state: RootState) => state.boards.currentBoard
+  const { currentBoard, isBoardLoaded } = useSelector(
+    (state: RootState) => state.boards
   );
 
   useEffect(() => {
-    if (currentBoard) {
-      dispatch(fetchLists(currentBoard.id))
-        .unwrap()
-        .then((lists) => {
-          lists.forEach((list: { id: number }) => {
-            dispatch(fetchTasks(list.id));
-          });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+    if (currentBoard && lists.length === 0 && !isBoardLoaded) {
+      dispatch(fetchBoardWithListsAndTasks(currentBoard.id));
     }
-  }, [dispatch, currentBoard]);
+  }, [dispatch, currentBoard, lists.length, isBoardLoaded]);
 
   if (isLoading) {
     return <div>Loading...</div>;

@@ -3,17 +3,23 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import * as styles from './Sidebar.css';
 import { Board } from '../Board/Board';
-import { Board as BoardType } from '../../types/types';
+import { Board as BoardType, List } from '../../types/types';
 import {
   fetchBoards,
   createBoard,
   setCurrentBoard,
   deleteBoard,
+  fetchBoardWithListsAndTasks,
+  setIsBoardLoaded,
 } from '../../store/slices/boardsSlice';
 import { AppDispatch, RootState } from '../../store/store';
 import { Modal } from '../Modal/Modal';
 import Input from '../Input/Input';
-import { removeListsByBoardId } from '../../store/slices/listsSlice';
+import {
+  clearLists,
+  removeListsByBoardId,
+} from '../../store/slices/listsSlice';
+import { clearTasks } from '../../store/slices/tasksSlice';
 
 const Sidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -50,8 +56,19 @@ const Sidebar = () => {
     }
   };
 
-  const handleSelectBoard = (board: BoardType) => {
-    dispatch(setCurrentBoard(board));
+  const handleSelectBoard = async (board: BoardType & { lists?: List[] }) => {
+    if (currentBoard?.id !== board.id) {
+      dispatch(clearLists());
+      dispatch(clearTasks());
+      dispatch(setCurrentBoard(board));
+      dispatch(setIsBoardLoaded(false));
+
+      const lists = board.lists;
+
+      if (lists && lists.length > 0) {
+        await dispatch(fetchBoardWithListsAndTasks(board.id));
+      }
+    }
   };
 
   const handleDeleteBoard = (boardId: number) => {
