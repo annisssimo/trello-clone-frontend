@@ -119,6 +119,11 @@ const boardsSlice = createSlice({
   reducers: {
     setCurrentBoard: (state, action: PayloadAction<Board | null>) => {
       state.currentBoard = action.payload;
+      if (action.payload) {
+        localStorage.setItem('currentBoardId', String(action.payload.id));
+      } else {
+        localStorage.removeItem('currentBoardId');
+      }
     },
     setIsBoardLoaded: (state, action: PayloadAction<boolean>) => {
       state.isBoardLoaded = action.payload;
@@ -143,8 +148,15 @@ const boardsSlice = createSlice({
       .addCase(fetchBoards.fulfilled, (state, action) => {
         state.isLoading = false;
         state.boards = action.payload;
-        if (!state.currentBoard && action.payload.length > 0) {
-          state.currentBoard = action.payload[0];
+
+        const savedBoardId = localStorage.getItem('currentBoardId');
+        if (savedBoardId) {
+          const currentBoard = state.boards.find(
+            (board) => board.id === Number(savedBoardId)
+          );
+          state.currentBoard = currentBoard || state.boards[0] || null;
+        } else {
+          state.currentBoard = state.boards[0] || null;
         }
       })
       .addCase(fetchBoards.rejected, (state, action) => {
@@ -160,6 +172,12 @@ const boardsSlice = createSlice({
         state.isLoading = false;
         state.boards.push(action.payload);
         state.currentBoard = action.payload;
+
+        if (action.payload) {
+          localStorage.setItem('currentBoardId', String(action.payload.id));
+        } else {
+          localStorage.removeItem('currentBoardId');
+        }
       })
       .addCase(createBoard.rejected, (state, action) => {
         state.isLoading = false;
@@ -206,8 +224,23 @@ const boardsSlice = createSlice({
           (board) => board.id !== deletedBoardId
         );
 
-        if (state.currentBoard?.id === deletedBoardId) {
+        const savedBoardId = localStorage.getItem('currentBoardId');
+        if (savedBoardId && Number(savedBoardId) === deletedBoardId) {
+          localStorage.removeItem('currentBoardId');
           state.currentBoard = state.boards.length > 0 ? state.boards[0] : null;
+          if (state.currentBoard) {
+            localStorage.setItem(
+              'currentBoardId',
+              String(state.currentBoard.id)
+            );
+          }
+        } else {
+          state.currentBoard =
+            state.currentBoard?.id === deletedBoardId
+              ? state.boards.length > 0
+                ? state.boards[0]
+                : null
+              : state.currentBoard;
         }
       })
       .addCase(deleteBoard.rejected, (state, action) => {
