@@ -1,4 +1,4 @@
-import { useEffect, useState, FormEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as styles from './Sidebar.css';
@@ -6,19 +6,17 @@ import { Board } from '../Board/Board';
 import { Board as BoardType, List } from '../../types/types';
 import {
   fetchBoards,
-  createBoard,
   setCurrentBoard,
   deleteBoard,
   setIsBoardLoaded,
 } from '../../store/slices/boardsSlice';
 import { AppDispatch, RootState } from '../../store/store';
-import { Modal } from '../Modal/Modal';
-import Input from '../Input/Input';
 import {
   clearLists,
   removeListsByBoardId,
 } from '../../store/slices/listsSlice';
 import { clearTasks } from '../../store/slices/tasksSlice';
+import CreateBoardModal from '../CreateBoardModal/CreateBoardModal';
 
 const Sidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -27,7 +25,6 @@ const Sidebar = () => {
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newBoardTitle, setNewBoardTitle] = useState('');
 
   useEffect(() => {
     dispatch(fetchBoards());
@@ -39,21 +36,6 @@ const Sidebar = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setNewBoardTitle('');
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (newBoardTitle.trim()) {
-      const resultAction = await dispatch(
-        createBoard({ title: newBoardTitle })
-      );
-      if (createBoard.fulfilled.match(resultAction)) {
-        dispatch(clearLists());
-        dispatch(clearTasks());
-        handleCloseModal();
-      }
-    }
   };
 
   const handleSelectBoard = async (board: BoardType & { lists?: List[] }) => {
@@ -104,21 +86,7 @@ const Sidebar = () => {
         </ul>
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        <h2>Create New Board</h2>
-        <form onSubmit={handleSubmit}>
-          <Input
-            id="boardTitle"
-            value={newBoardTitle}
-            onChange={(e) => setNewBoardTitle(e.target.value)}
-            label="Board Title"
-            required
-          />
-          <button type="submit" className={styles.saveButton}>
-            Create Board
-          </button>
-        </form>
-      </Modal>
+      <CreateBoardModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </>
   );
 };

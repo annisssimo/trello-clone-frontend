@@ -34,14 +34,3 @@ export const activeBoard = style({
   backgroundColor: '#c9c8c4',
   fontWeight: 'bold',
 });
-
-export const saveButton = style({
-  display: 'block',
-  marginTop: '10px',
-  backgroundColor: '#028ad9',
-  color: 'white',
-  padding: '8px 16px',
-  border: 'none',
-  borderRadius: '5px',
-  transition: 'background-color 0.3s ease',
-});
