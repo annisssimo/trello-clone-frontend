@@ -26,7 +26,13 @@ export const fetchLogs = createAsyncThunk(
 const logsSlice = createSlice({
   name: 'logs',
   initialState,
-  reducers: {},
+  reducers: {
+    setLogs: (state, action) => {
+      state.logs = action.payload;
+      state.isLoading = false;
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchLogs.pending, (state) => {
@@ -39,6 +45,8 @@ const logsSlice = createSlice({
       });
   },
 });
+
+export const { setLogs } = logsSlice.actions;
 
 export default logsSlice.reducer;
 
