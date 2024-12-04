@@ -9,7 +9,6 @@ import {
   createBoard,
   setCurrentBoard,
   deleteBoard,
-  fetchBoardWithListsAndTasks,
   setIsBoardLoaded,
 } from '../../store/slices/boardsSlice';
 import { AppDispatch, RootState } from '../../store/store';
@@ -50,7 +49,8 @@ const Sidebar = () => {
         createBoard({ title: newBoardTitle })
       );
       if (createBoard.fulfilled.match(resultAction)) {
-        dispatch(setCurrentBoard(resultAction.payload));
+        dispatch(clearLists());
+        dispatch(clearTasks());
         handleCloseModal();
       }
     }
@@ -62,12 +62,6 @@ const Sidebar = () => {
       dispatch(clearTasks());
       dispatch(setCurrentBoard(board));
       dispatch(setIsBoardLoaded(false));
-
-      const lists = board.lists;
-
-      if (lists && lists.length > 0) {
-        await dispatch(fetchBoardWithListsAndTasks(board.id));
-      }
     }
   };
 

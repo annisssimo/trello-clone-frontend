@@ -159,6 +159,7 @@ const boardsSlice = createSlice({
       .addCase(createBoard.fulfilled, (state, action) => {
         state.isLoading = false;
         state.boards.push(action.payload);
+        state.currentBoard = action.payload;
       })
       .addCase(createBoard.rejected, (state, action) => {
         state.isLoading = false;
@@ -171,13 +172,22 @@ const boardsSlice = createSlice({
       })
       .addCase(updateBoard.fulfilled, (state, action) => {
         state.isLoading = false;
+
         const updatedBoard = action.payload;
+
         const index = state.boards.findIndex(
           (board) => board.id === updatedBoard.id
         );
+
         if (index !== -1) {
           state.boards[index] = updatedBoard;
         }
+
+        state.currentBoard = {
+          ...state.currentBoard,
+          id: state.currentBoard?.id ?? updatedBoard.id,
+          title: updatedBoard.title,
+        };
       })
       .addCase(updateBoard.rejected, (state, action) => {
         state.isLoading = false;

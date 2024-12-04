@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { AppDispatch, RootState } from '../../store/store';
-import { updateBoard, setCurrentBoard } from '../../store/slices/boardsSlice';
+import { updateBoard } from '../../store/slices/boardsSlice';
 import EditableText from '../EditableText/EditableText';
 import * as styles from './SubHeader.css';
 import ActivitySidebar from '../ActivitySidebar/ActivitySidebar';
@@ -19,7 +19,6 @@ const SubHeader = () => {
   const handleSave = (newTitle: string) => {
     if (currentBoard) {
       dispatch(updateBoard({ id: currentBoard.id, title: newTitle }));
-      dispatch(setCurrentBoard({ ...currentBoard, title: newTitle }));
     }
   };
 
